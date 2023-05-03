@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./.docker/nginx
+      dockerfile: Dockerfile
+    container_name: nginx_challenge
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - node
+    networks:
+      - challenge-network
+  node:
+    build:
+      context: .
+      dockerfile: ./.docker/nodejs/Dockerfile
+    container_name: node_challenge
+    restart: always
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - challenge-network
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0.25
+    container_name: db_challenge
+    restart: always
+    volumes:
+      - ./DB/:/var/lib/mysql
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: challenge
+      MYSQL_USER: challenge
+      MYSQL_PASSWORD: challenge
+      MYSQL_ROOT_PASSWORD: challenge
+    ports:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - challenge-network
+
+networks:
+  challenge-network:
+    driver: bridge
