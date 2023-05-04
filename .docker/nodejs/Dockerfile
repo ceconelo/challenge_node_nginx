@@ -8,9 +8,10 @@ COPY ./.docker/nodejs/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-ENTRYPOINT ["/entrypoint"]
-
 WORKDIR /usr/src/app
+COPY package*.json ./
+
+ENTRYPOINT ["/entrypoint"]
 
 COPY . .
 

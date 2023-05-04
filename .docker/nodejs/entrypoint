@@ -9,4 +9,6 @@ set -o nounset
 
  /./wait-for-it "db:3306" -s -t 20 -- echo "MySQL is up"
 
+npm ci
+
 exec "$@"
